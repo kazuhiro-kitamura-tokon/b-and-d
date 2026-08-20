@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ja" data-tone="ink">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>B&D AI導入・理念浸透ブループリント</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=M+PLUS+1+Code:wght@400;500&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap');
+
+:root{
+  --bg:#FAFBFC; --bg-card:#FFFFFF; --bg-accent:#F1F2F6;
+  --text-primary:#1A1C22; --text-secondary:#585B66; --text-tertiary:#8C8F9C;
+  --border:#E0E2E8; --accent:#1A1C22; --accent-soft:#ECEDF2; --accent-mid:#363840;
+  --sec1:#1A1C22; --sec2:#363840; --sec3:#484B56; --sec4:#787B8A;
+  --hero-from:#10121A; --hero-to:#363840; --hero-glow:rgba(180,190,220,0.04); --hero-highlight:#AEB1BE;
+  --code-bg:#10121A; --code-text:#F0F0F4; --code-comment:#696C7A;
+  --tag-bg:#E6E8EE; --tag-text:#363840;
+  --practice-from:#EEF0F5; --practice-to:#E6E8EE; --practice-border:#D2D4DC;
+  --prompt-label:#8C8F9C;
+  --font-jp:'Zen Kaku Gothic New','Hiragino Kaku Gothic ProN',sans-serif;
+  --font-en:'Inter',sans-serif;
+  --font-mono:'M PLUS 1 Code','Menlo','Osaka-Mono',monospace;
+  --shadow-sm:0 1px 3px rgba(20,22,30,0.06);
+  --shadow-md:0 6px 20px rgba(20,22,30,0.09);
+}
+html[data-tone="blue"]{
+  --accent:#2563EB; --accent-soft:#EFF6FF; --accent-mid:#1D4ED8;
+  --sec1:#2563EB; --sec2:#059669; --sec3:#7C3AED; --sec4:#D97706;
+  --hero-from:#0F172A; --hero-to:#1E3A5F; --hero-glow:rgba(59,130,246,0.15); --hero-highlight:#60A5FA;
+  --code-bg:#1E293B; --code-text:#E2E8F0; --code-comment:#64748B;
+  --tag-bg:#DBEAFE; --tag-text:#1D4ED8; --prompt-label:#60A5FA;
+}
+html[data-theme="dark"]{
+  --bg:#10121A; --bg-card:#1A1C22; --bg-accent:#22242A;
+  --text-primary:#E2E4EA; --text-secondary:#9A9CA6; --text-tertiary:#6A6C76;
+  --border:#2E3038; --accent:#C6C8D4; --accent-soft:#22242A; --accent-mid:#9A9CA6;
+  --hero-highlight:#E2E4EA;
+  --tag-bg:#2A2C34; --tag-text:#AEB1BE;
+  --practice-from:#1E2028; --practice-to:#25272E; --practice-border:#2E3038;
+  --prompt-label:#8C8F9C;
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.3); --shadow-md:0 6px 20px rgba(0,0,0,0.4);
+}
+html[data-theme="dark"][data-tone="blue"]{
+  --accent:#60A5FA; --accent-soft:#1E293B; --accent-mid:#93C5FD;
+  --sec1:#60A5FA; --sec2:#34D399; --sec3:#A78BFA; --sec4:#FBBF24;
+  --tag-bg:#1E293B; --tag-text:#93C5FD; --prompt-label:#60A5FA;
+}
+html[data-fs="1"]{zoom:0.88} html[data-fs="2"]{zoom:0.94} html[data-fs="4"]{zoom:1.06} html[data-fs="5"]{zoom:1.12}
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-jp);background:var(--bg);color:var(--text-primary);line-height:1.85;font-size:15.5px;transition:background 0.3s,color 0.3s}
+
+/* ===== Controls ===== */
+.controls{position:fixed;top:16px;right:16px;z-index:100;display:flex;gap:8px;align-items:center}
+.ctl{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:6px 11px;cursor:pointer;font-family:var(--font-en);font-size:11px;font-weight:600;color:var(--text-secondary);letter-spacing:0.5px;transition:all 0.2s;display:flex;align-items:center;gap:5px}
+.ctl:hover{color:var(--accent);border-color:var(--accent-mid)}
+.ctl svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* ===== Side nav ===== */
+.sidenav{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:90;opacity:0;pointer-events:none;transition:opacity 0.6s}
+.sidenav.on{opacity:1;pointer-events:auto}
+.sidenav ul{list-style:none;position:relative}
+.sidenav ul::before{content:'';position:absolute;left:3.5px;top:12px;bottom:12px;width:1px;background:var(--border)}
+.sidenav li{position:relative;padding:9px 0 9px 22px;cursor:pointer;display:flex;align-items:center}
+.sidenav .dot{position:absolute;left:0;width:8px;height:8px;border-radius:50%;background:var(--border);transition:all 0.25s}
+.sidenav li.active .dot{width:10px;height:10px;left:-1px;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.sidenav .lbl{font-size:11px;font-weight:500;color:var(--text-tertiary);opacity:0;transform:translateX(-6px);transition:all 0.25s;white-space:nowrap}
+.sidenav li:hover .lbl,.sidenav li.active .lbl{opacity:1;transform:translateX(0);color:var(--text-primary)}
+@media(max-width:1100px){.sidenav{display:none}}
+
+/* ===== Cover ===== */
+.cover{min-height:74vh;background:linear-gradient(135deg,var(--hero-from),var(--hero-to));display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:80px 24px;position:relative;overflow:hidden}
+.cover::before{content:'';position:absolute;top:-20%;right:-10%;width:60%;height:80%;background:radial-gradient(circle,var(--hero-glow),transparent 70%);pointer-events:none}
+.cover .pill{font-family:var(--font-en);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.75);border:1px solid rgba(255,255,255,0.25);border-radius:100px;padding:7px 20px;margin-bottom:36px}
+.cover h1{font-size:clamp(26px,4.6vw,44px);font-weight:700;color:#fff;line-height:1.5;letter-spacing:0.02em;margin-bottom:22px}
+.cover h1 em{font-style:normal;color:var(--hero-highlight)}
+.cover .sub{font-size:15px;color:rgba(255,255,255,0.65);max-width:640px;line-height:2}
+.cover .meta{margin-top:44px;font-family:var(--font-en);font-size:11.5px;letter-spacing:1.5px;color:rgba(255,255,255,0.45)}
+
+/* ===== Layout ===== */
+.wrap{max-width:880px;margin:0 auto;padding:0 28px}
+section{padding:72px 0 8px}
+.sec-label{font-family:var(--font-en);font-size:11px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+h2{font-size:26px;font-weight:700;letter-spacing:0.02em;margin-bottom:14px;line-height:1.5}
+.lead{color:var(--text-secondary);margin-bottom:36px;max-width:720px}
+h3{font-size:17.5px;font-weight:700;margin:36px 0 14px;display:flex;align-items:center;gap:10px}
+h3 svg{width:19px;height:19px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+p{margin-bottom:14px;color:var(--text-secondary)}
+strong{color:var(--text-primary);font-weight:700}
+hr.divider{border:none;border-top:1px solid var(--border);margin:64px 0 0}
+
+/* ===== Components ===== */
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:26px 28px;margin-bottom:16px;box-shadow:var(--shadow-sm);transition:transform 0.25s,box-shadow 0.25s}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.card h4{font-size:15.5px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:9px}
+.card h4 svg{width:17px;height:17px;stroke:var(--accent);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.card p:last-child{margin-bottom:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.grid2{grid-template-columns:1fr}}
+
+.insight{background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:20px 24px;margin:22px 0}
+.insight p{margin:0;color:var(--text-primary)}
+.insight .in-label{font-family:var(--font-en);font-size:10.5px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:7px}
+
+.tag{display:inline-block;background:var(--tag-bg);color:var(--tag-text);font-size:11.5px;font-weight:600;padding:3px 12px;border-radius:100px;margin-right:6px;margin-bottom:6px;letter-spacing:0.5px}
+
+.quotebox{background:var(--bg-accent);border-radius:12px;padding:18px 22px;margin:16px 0;border:1px solid var(--border)}
+.quotebox p{margin:0;color:var(--text-primary);font-size:14.5px}
+.quotebox .src{display:block;margin-top:8px;font-size:12px;color:var(--text-tertiary)}
+
+/* prompt / talk box */
+.prompt{background:var(--code-bg);border-radius:14px;padding:22px 24px;margin:18px 0;position:relative}
+.prompt .p-label{font-family:var(--font-en);font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--prompt-label);display:block;margin-bottom:12px}
+.prompt pre{font-family:var(--font-mono);font-size:13.5px;color:var(--code-text);white-space:pre-wrap;line-height:1.95;margin:0}
+.prompt .c{color:var(--code-comment)}
+.copybtn{position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.12);border:none;color:#F0F0F4;font-family:var(--font-jp);font-size:11.5px;padding:5px 13px;border-radius:7px;cursor:pointer;transition:background 0.2s}
+.copybtn:hover{background:rgba(255,255,255,0.22)}
+
+/* timeline */
+.timeline{position:relative;margin:28px 0;padding-left:34px}
+.timeline::before{content:'';position:absolute;left:9px;top:8px;bottom:8px;width:2px;background:var(--border)}
+.tl-item{position:relative;margin-bottom:26px}
+.tl-item::before{content:'';position:absolute;left:-31px;top:7px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:3px solid var(--accent)}
+.tl-item .tl-phase{font-family:var(--font-en);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent)}
+.tl-item h4{font-size:16px;font-weight:700;margin:4px 0 8px}
+.tl-item p{margin-bottom:6px;font-size:14.5px}
+.tl-item .tl-goal{font-size:13px;color:var(--text-tertiary)}
+
+/* table */
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:14px}
+th{text-align:left;font-size:12px;font-weight:700;letter-spacing:1px;color:var(--text-tertiary);text-transform:uppercase;font-family:var(--font-en);padding:10px 14px;border-bottom:2px solid var(--border)}
+td{padding:13px 14px;border-bottom:1px solid var(--border);color:var(--text-secondary);vertical-align:top}
+td:first-child{color:var(--text-primary);font-weight:700;white-space:nowrap}
+
+.num{font-family:var(--font-en);font-size:30px;font-weight:300;color:var(--text-tertiary);line-height:1;margin-bottom:10px}
+
+/* footer */
+.foot{background:linear-gradient(135deg,var(--hero-from),var(--hero-to));margin-top:80px;padding:60px 24px;text-align:center}
+.foot p{color:rgba(255,255,255,0.7);font-size:13.5px;max-width:620px;margin:0 auto 10px;line-height:2}
+.foot .f-en{font-family:var(--font-en);font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(255,255,255,0.4);margin-top:26px}
+
+/* fade-up */
+.fade-up{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+  <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+  <symbol id="i-map" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></symbol>
+  <symbol id="i-msg" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+</svg>
+
+<div class="controls">
+  <button class="ctl" id="toneBtn">LUNAR GRAY</button>
+  <button class="ctl" id="themeBtn" aria-label="theme"><svg id="themeIcon"><use href="#i-moon"/></svg></button>
+  <button class="ctl" id="fsMinus">A-</button>
+  <button class="ctl" id="fsPlus">A+</button>
+</div>
+
+<nav class="sidenav" id="sidenav">
+  <ul>
+    <li data-target="s1"><span class="dot"></span><span class="lbl">現在地</span></li>
+    <li data-target="s2"><span class="dot"></span><span class="lbl">三層構造</span></li>
+    <li data-target="s3"><span class="dot"></span><span class="lbl">二本立て</span></li>
+    <li data-target="s4"><span class="dot"></span><span class="lbl">ロードマップ</span></li>
+    <li data-target="s5"><span class="dot"></span><span class="lbl">社長への伝え方</span></li>
+    <li data-target="s6"><span class="dot"></span><span class="lbl">巻き込みマップ</span></li>
+    <li data-target="s7"><span class="dot"></span><span class="lbl">役員会シナリオ</span></li>
+    <li data-target="s8"><span class="dot"></span><span class="lbl">Next Steps</span></li>
+  </ul>
+</nav>
+
+<!-- ============ COVER ============ -->
+<header class="cover" id="cover">
+  <div class="pill">B&amp;D × TOKON — AI TRANSFORMATION BLUEPRINT</div>
+  <h1>理念を、<em>守るもの</em>から、<br><em>思い出すもの</em>へ。</h1>
+  <p class="sub">2026年8月18日の対話をもとに、B&amp;D様における AI 導入と理念浸透の全体像を、参考資料として一枚にまとめました。</p>
+  <div class="meta">2026.08.18 SESSION @ HIGASHI-GINZA &nbsp;/&nbsp; PREPARED BY EXLICA (TOKON)</div>
+</header>
+
+<div class="wrap">
+
+<!-- ============ 01 診断 ============ -->
+<section id="s1">
+  <div class="sec-label fade-up">01 — Diagnosis</div>
+  <h2 class="fade-up">ご相談の中で見えてきたもの</h2>
+  <p class="lead fade-up">1時間半の対話を振り返ると、B&amp;D様の現在地は「課題が多い会社」ではなく、<strong>目標・理念・危機感がすでに揃っていて、それらを繋ぐ回路がまだ整っていない会社</strong>なのではないか——というのが私たちの読みです。</p>
+
+  <div class="grid2">
+    <div class="card fade-up">
+      <div class="num">01</div>
+      <h4><svg><use href="#i-target"/></svg>目標はある</h4>
+      <p>全社方針として掲げられている「5年後150%」。人員を1.5倍にするのではなく、<strong>一人当たり生産性を高める</strong>方向性も共有されつつあるとのこと。AIはその有力な現実解として、すでに議論の俎上にあります。</p>
+    </div>
+    <div class="card fade-up">
+      <div class="num">02</div>
+      <h4><svg><use href="#i-book"/></svg>理念もある</h4>
+      <p>理念ブック、マネージャー14条、そして「真の事業戦略パートナー」という創業理念。<strong>言語化された資産はすでに豊富</strong>にあります。ゼロから作るのではなく、「参照される形」への変換がテーマになりそうです。</p>
+    </div>
+    <div class="card fade-up">
+      <div class="num">03</div>
+      <h4><svg><use href="#i-alert"/></svg>足元にリスクがある</h4>
+      <p>無料版AIの業務利用が広がっており、学習設定・オプトアウトが未統制。<strong>広告会社にとってクライアント情報は生命線</strong>であり、ここは理念以前の緊急対処事項です。</p>
+    </div>
+    <div class="card fade-up">
+      <div class="num">04</div>
+      <h4><svg><use href="#i-users"/></svg>回路が欠けている</h4>
+      <p>理念は「その場では伝わる」が、現場の判断の瞬間には引き出されない。評価・企画・提案の各場面で、<strong>経営の意図と現場の解釈にギャップ</strong>が生じている。ここが諸課題の共通の根にありそうです。</p>
+    </div>
+  </div>
+
+  <div class="insight fade-up">
+    <span class="in-label">Key Insight</span>
+    <p>理念が浸透しない会社の多くは、理念が「なかった」のではなく「<strong>あったが、判断の瞬間に参照されなかった</strong>」。エンロンは立派な行動規範の冊子を持っていました。プルデンシャル生命は理念浸透の代名詞でした。差が出るのは掲げる力ではなく、<strong>参照される仕組み</strong>ではないか——というのが本書の出発点です。</p>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- ============ 02 三層構造 ============ -->
+<section id="s2">
+  <div class="sec-label fade-up">02 — Structure</div>
+  <h2 class="fade-up">課題の三層構造</h2>
+  <p class="lead fade-up">ご相談の中で話題に出たテーマ（セキュリティ／研修／評価／理念／物語）は、三つの層に整理できそうです。<strong>層によって、緊急度も、検討の場も、お話しする相手も少しずつ違います。</strong>分けて進めることで、それぞれが動きやすくなると考えています。</p>
+
+  <div class="card fade-up">
+    <h4><svg><use href="#i-shield"/></svg>第一層｜守り — セキュリティと統制<span class="tag" style="margin-left:10px">緊急</span></h4>
+    <p>無料版AIからの情報流出リスクの遮断。有料版への切替、学習オフ設定、オプトアウト確認、利用ガイドライン。<strong>合意が得やすく、費用も小さく、すぐに動き出せる</strong>層です。役員会でのご検討に向いています。</p>
+  </div>
+  <div class="card fade-up">
+    <h4><svg><use href="#i-msg"/></svg>第二層｜習慣 — AIと働く文化<span class="tag" style="margin-left:10px">中期</span></h4>
+    <p>ツール導入で安心して使われない「Excel現象」を避け、<strong>AIを道具ではなく同僚として</strong>日常業務すべてを一度投げる習慣を作る。デモ中心の研修、エバンジェリスト、評価との連動。研修・人事の領域と一緒に育てていくところです。</p>
+  </div>
+  <div class="card fade-up">
+    <h4><svg><use href="#i-compass"/></svg>第三層｜理念 — 判断基準の正典化<span class="tag" style="margin-left:10px">中核</span></h4>
+    <p>社長の30年とB&amp;Dの判断基準を、人にもAIにも「参照できる形」に変換する（コルポラ）。企画書チェック、壁打ち、クリエイティブのトーン維持へ展開。こちらは役員会というより、<strong>社長ご自身との対話の中で育てていく領域</strong>かと思います。</p>
+  </div>
+
+  <div class="insight fade-up">
+    <span class="in-label">順番を大切にしたい理由</span>
+    <p>第三層から入ると「大きな話」として先送りされやすく、第一層を置いたままにすると、万一の事故で計画全体が止まりかねません。<strong>守りで実績を、習慣で土壌を、そのうえで理念へ。</strong>この順番を大切にしたいと考えています。</p>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- ============ 03 二正面作戦 ============ -->
+<section id="s3">
+  <div class="sec-label fade-up">03 — Strategy</div>
+  <h2 class="fade-up">二本立ての進め方</h2>
+  <p class="lead fade-up">三つの層は、進めるルートも二本に分かれそうです。<strong>役員会でご検討いただくもの</strong>と、<strong>社長ご自身と進めるもの</strong>。この二つを分けて考えることを、本書ではご提案しています。</p>
+
+  <div class="grid2">
+    <div class="card fade-up">
+      <h4><svg><use href="#i-shield"/></svg>ルートA｜役員会</h4>
+      <p><strong>持ち込むもの：</strong>第一層（守り）＋第二層の入口（研修）</p>
+      <p><strong>考え方：</strong>リスク対応と生産性を、数字と事例で。クリエイティブ部門での試行実績を「削減時間×時給」で示せると説得力が増します。</p>
+      <p><strong>ねらい：</strong>合意しやすい議題から着実に前進し、「AIの話は進めやすい」という空気を役員会に育てる。</p>
+    </div>
+    <div class="card fade-up">
+      <h4><svg><use href="#i-book"/></svg>ルートB｜社長との対話</h4>
+      <p><strong>持ち込むもの：</strong>第三層（物語→コルポラ）</p>
+      <p><strong>考え方：</strong>管理や制度の話としてではなく、<strong>「30年を物語として残す」というレガシーの話</strong>として、社長ご自身のテーマとしてお渡しする。</p>
+      <p><strong>ねらい：</strong>社長ご自身が「自分ごと」として楽しめる形を作る。理念は、その持ち主が主役になってこそ動き始めるためです。</p>
+    </div>
+  </div>
+
+  <div class="insight fade-up">
+    <span class="in-label">この進め方の土台</span>
+    <p>役員会資料は、外部の主張ではなく<strong>B&amp;D様の中にすでにある言葉で組み立てられます</strong>。「5年後150%」という全社方針も、理念ブックも、14条も、「真の事業戦略パートナー」という理念も、すべて社内で育てられてきたもの。ご提案はその延長線上に置くだけなので、<strong>「新しい話」ではなく「これまでの続き」として受け取っていただきやすい</strong>はずです。</p>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- ============ 04 ロードマップ ============ -->
+<section id="s4">
+  <div class="sec-label fade-up">04 — Roadmap</div>
+  <h2 class="fade-up">進め方と順番</h2>
+  <p class="lead fade-up">来月の役員会を最初のマイルストーンに置いた、4フェーズの進め方（案）です。</p>
+
+  <div class="timeline fade-up">
+    <div class="tl-item">
+      <span class="tl-phase">Phase 0｜今週〜2週間</span>
+      <h4>役員会実施前に守りを固める</h4>
+      <p>・全社員のオプトアウト設定確認（宿題化済み）<br>・有料版切替の対象範囲と概算費用の整理<br>・「これだけは守る」利用ルール1枚の草案</p>
+      <p class="tl-goal">ゴール：役員会当日に「もう着手しています」と言える状態</p>
+    </div>
+    <div class="tl-item">
+      <span class="tl-phase">Phase 1｜来月</span>
+      <h4>役員会での合意形成（ルートA）</h4>
+      <p>・守り＋研修の二本立てで提案（詳細は07章）<br>・理念×AIは「別途、社長とお時間をいただきたい」と予告に留める<br>・TOKONは資料の構成と想定問答で後方支援</p>
+      <p class="tl-goal">ゴール：承認一件。次につながる前例づくり</p>
+    </div>
+    <div class="tl-item">
+      <span class="tl-phase">Phase 2｜役員会後〜3ヶ月</span>
+      <h4>社長の物語づくりを始める（ルートB）</h4>
+      <p>・社長との1on1セッション（詳細は05章）<br>・インタビュー開始（ライト版4回 or 正規版10回）<br>・並行して研修第一弾：デモ中心、「日常業務を全部AIに投げる」体験</p>
+      <p class="tl-goal">ゴール：社長ご自身が「自分の棚卸しとして」前向きになれること</p>
+    </div>
+    <div class="tl-item">
+      <span class="tl-phase">Phase 3｜3〜6ヶ月</span>
+      <h4>理念を仕組みに実装開始</h4>
+      <p>・コルポラ（JSON）納品 → 企画書の壁打ち・チェックの業務フロー化<br>・14条との接続：評価の判断基準として参照できる形へ<br>・クリエイティブ制作のトーンガイドとしての展開（「うちらしさ」の防波堤）<br>・エバンジェリスト制度と評価連動の設計</p>
+      <p class="tl-goal">ゴール：判断の瞬間に理念が引き出される最初の業務が回り始める</p>
+    </div>
+  </div>
+
+  <div class="insight fade-up">
+    <span class="in-label">歴史が教える順番</span>
+    <p>2000年続いた組織がやったことは三つだけです。<strong>正典化</strong>（散らばった教えを一つの参照先に確定する）、<strong>翻訳</strong>（読み手が変わっても届く形に訳す——人にも、AIにも）、<strong>朗読の仕組み</strong>（テキストは置くだけでは動かない。運用する人を置く）。Phase 2〜3はこの三工程をB&amp;D様仕様で実装するものです。</p>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- ============ 05 社長への伝え方 ============ -->
+<section id="s5">
+  <div class="sec-label fade-up">05 — For the President</div>
+  <h2 class="fade-up">社長への伝え方</h2>
+  <p class="lead fade-up">本書でいちばんお伝えしたい章です。大切にしたいのは、<strong>「理念を管理する話」として持ち込まない</strong>こと。「ご自身が評価される話」に聞こえてしまうか、「ご自身の30年が形になる話」として届くか——同じ内容でも、受け取られ方が大きく変わるように思います。</p>
+
+  <div class="grid2">
+    <div class="card fade-up">
+      <h4><svg><use href="#i-alert"/></svg>避けたい入り方</h4>
+      <p>「理念をAIに学習させて、浸透を管理しましょう」<br>「判断基準を統一するシステムを入れましょう」</p>
+      <p style="font-size:13.5px;color:var(--text-tertiary)">→ 制度・監視の話に聞こえる。理解はされるが、心は動かない。</p>
+    </div>
+    <div class="card fade-up">
+      <h4><svg><use href="#i-check"/></svg>開く入り方</h4>
+      <p>「社長の30年を、物語として残しませんか」<br>「創業からの歩みを、次の世代が受け取れる形に」</p>
+      <p style="font-size:13.5px;color:var(--text-tertiary)">→ レガシーと誇りの話。棚卸しは経営者自身への最大のギフトになる。</p>
+    </div>
+  </div>
+
+  <h3 class="fade-up"><svg><use href="#i-key"/></svg>効果的な切り口のアイデア</h3>
+
+  <div class="card fade-up">
+    <h4>① ドン・キホーテの前例</h4>
+    <p>創業者のAI化と、創業ストーリーを音楽・映像にした事例。段ボールで寝起きした夜、深夜2時に扉を叩いた客——<strong>物語だから、24時間営業の「なぜ」が一発で伝わる</strong>。以前の打ち合わせでも話題に上がり、手応えのあった切り口です。</p>
+  </div>
+  <div class="card fade-up">
+    <h4>② 「フィルターを外す」という提案</h4>
+    <p>30年の歴史と立場は、伝える言葉に自然とフィルターを作ります。役職として言葉を選ばざるを得ない。<strong>外部インタビューは、そのフィルターを一度外して「一人の人間として」語れる場</strong>です。過去の実施企業でも、経営者ご本人が「自分はこれを大事にしていたのか」と初めて言語化できたこと自体を最大の価値と評価されています。</p>
+  </div>
+  <div class="card fade-up">
+    <h4>③ プルデンシャルの教訓（守りの論理）</h4>
+    <p>理念浸透の代名詞だった会社の不正は、「理念が誤った形で制度化されると、逆に行動を正当化する凶器になる」ことを示しました。だからコルポラは<strong>答えを固定する装置ではなく、問い続けるための参照点</strong>として設計します。経営の考えは、いま現場にどう伝わっているのか——それを確かめ続けられる仕組みでありたい。ご相談の中で共有されたこの問題意識こそが、このプロジェクトの何よりの動機になると感じています。</p>
+  </div>
+
+  <div class="prompt fade-up">
+    <span class="p-label">Talk Example — 社長への最初の一言（たたき台）</span>
+    <button class="copybtn" onclick="copyPrompt(this)">コピー</button>
+    <pre>社長、AIの話じゃないんです。<span class="c">← まずAIの話にしない</span>
+
+創業からの30年、社長の中にしかない判断の理由がたくさんあると思うんです。
+なぜあの仕事を取りに行ったのか。なぜあの案件を断ったのか。
+
+それを一度、物語として全部残しませんか。
+ドンキの創業ストーリーみたいに、うちの30年を。
+
+インタビューはプロが入ります。誰にも見せない前提で、
+残すもの・残さないものは全部社長が決められます。
+
+……で、それが残ると、実は続きがあるんです。
+その物語を読んだAIが、社長の代わりに毎日
+社員の壁打ち相手になれる。社長は全員と週2時間話せないけど、
+これならできる。まず物語からです。</pre>
+  </div>
+
+  <div class="insight fade-up">
+    <span class="in-label">順番のご提案</span>
+    <p>「物語 → だからコルポラ」の順でお話しするのがおすすめです。<strong>物語は目的としてそれ自体で成立していて、コルポラはその副産物として添える</strong>。この順の方が、自然に受け取っていただけるように思います。</p>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- ============ 06 巻き込みマップ ============ -->
+<section id="s6">
+  <div class="sec-label fade-up">06 — Alignment</div>
+  <h2 class="fade-up">巻き込みマップ</h2>
+  <p class="lead fade-up">同じ提案でも、立場によって「聞こえ方」は変わります。相手ごとに<strong>その方にとってのメリット</strong>からお話しするための整理です。</p>
+
+  <table class="fade-up">
+    <thead><tr><th>相手</th><th>その人にとっての得</th><th>話す順番・注意</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>社長</td>
+        <td>30年のレガシーが形になる。自分の言葉が薄まらず全社員に届く。</td>
+        <td>物語から。管理・制度・評価の語彙は避ける。役員会の前ではなく<strong>後</strong>に、1on1で。</td>
+      </tr>
+      <tr>
+        <td>役員層</td>
+        <td>情報漏洩リスクの遮断（守りの責任を果たせる）。150%への具体的な道筋。</td>
+        <td>リスクと数字だけで語る。理念の話は深追いせず「社長と別途」で切り分ける。</td>
+      </tr>
+      <tr>
+        <td>本部長層</td>
+        <td>105%提案を支えるAIという「武器」。クライアントの前で恥をかかない下支え。</td>
+        <td><strong>「チェックされる仕組み」ではなく「提案が強くなる仕組み」として先に体験していただく</strong>。監視の印象が先に立つと受け入れられにくいためです。</td>
+      </tr>
+      <tr>
+        <td>現場・若手</td>
+        <td>定型作業からの解放。100%はAI、自分は上乗せの20%に集中できる。</td>
+        <td>説明ではなくデモ。目の前で議事録→レポート→当日納品をやって見せる。</td>
+      </tr>
+      <tr>
+        <td>40〜50代</td>
+        <td>AIで一番化ける層。経験×AIで、諦めていた企画やアイデアが形になる。</td>
+        <td>「継承してください」ではなく「<strong>翼を授ける</strong>」の向きで。人生の集大成として、経験をAIに載せる役割を依頼する。</td>
+      </tr>
+      <tr>
+        <td>エバンジェリスト候補</td>
+        <td>新しい評価軸での抜擢。社内での存在感。</td>
+        <td>研修第一弾の反応で発掘。役職に関係なく指名し、発信の場と小さな権限を渡す。</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="insight fade-up">
+    <span class="in-label">巻き込みの鉄則</span>
+    <p>この構想には「経営の意図が現場の判断に届く」という側面が必ず含まれますが、それを<strong>先にお伝えするか、後にお伝えするかで、印象は大きく変わります</strong>。共通の入口は「あなたの仕事が強くなる」。統制の側面は、価値を体験した後の方が自然に受け入れられるように思います。</p>
+  </div>
+</section>
+<hr class="divider">
+
+<!-- ============ 07 役員会シナリオ ============ -->
+<section id="s7">
+  <div class="sec-label fade-up">07 — Board Meeting</div>
+  <h2 class="fade-up">来月の役員会シナリオ</h2>
+  <p class="lead fade-up">発表資料の構成案と、想定問答です。<strong>資料の叩きはB&amp;D様側で、構成・データ・想定問答の下支えはTOKONで</strong>——という分担を想定しています。</p>
+
+  <h3 class="fade-up"><svg><use href="#i-layers"/></svg>資料構成案（5パート・15分）</h3>
+
+  <div class="card fade-up">
+    <h4>1｜リスク：いま起きていること</h4>
+    <p>無料版AIの業務利用の現状。広告会社にとってのクライアント情報流出の意味。「導入するかどうか」ではなく「<strong>すでに使われている現状に、どう向き合うか</strong>」の問いとして立てる。</p>
+  </div>
+  <div class="card fade-up">
+    <h4>2｜環境：業界の速度</h4>
+    <p>競合のAI活用、手数料モデルからの脱却圧力、電通ですら変化を迫られている事実。「待つ」という選択肢が存在しないことの確認。</p>
+  </div>
+  <div class="card fade-up">
+    <h4>3｜提案①：守りの整備（即決事項）</h4>
+    <p>有料版切替＋学習オフ＋利用ルール。費用は小さく、効果は即日。<strong>この場で決められる粒度</strong>に刻んで出す。</p>
+  </div>
+  <div class="card fade-up">
+    <h4>4｜提案②：攻めの入口（研修）</h4>
+    <p>クリエイティブ部門での試行実績を数字で（削減時間・納期短縮）。デモ中心研修の第一弾。AIパスポート施策との接続で「既定路線の続き」として位置づける。</p>
+  </div>
+  <div class="card fade-up">
+    <h4>5｜予告：150%への地図</h4>
+    <p>本日の承認事項はPhase 0-1であること。その先に「理念×AI」の構想があることを<strong>1枚だけ</strong>見せ、「こちらは社長とお時間をいただいて進めたい」と添えて締める。この場での審議事項にはしない想定です。</p>
+  </div>
+
+  <h3 class="fade-up"><svg><use href="#i-msg"/></svg>想定問答</h3>
+  <table class="fade-up">
+    <thead><tr><th>想定質問</th><th>返しの軸</th></tr></thead>
+    <tbody>
+      <tr><td>「コストは？」</td><td>有料版は月額数千円/人。無料版の情報流出が起こした場合の損失（クライアント1社の喪失）と比較する。保険と考えると小さな投資です。</td></tr>
+      <tr><td>「今じゃなくても」</td><td>今この瞬間も無料版に業務情報が入っている。「今やらない」ことが「流出リスクを許容する」判断になってしまう懸念を、丁寧にお伝えする。</td></tr>
+      <tr><td>「使いこなせるのか」</td><td>ツールを配る施策ではなく、習慣を作る施策（デモ研修）とセットであることを示す。Excel現象への対策込み。</td></tr>
+      <tr><td>「クリエイティブの仕事を奪うのでは / 炎上リスクは」</td><td>むしろAIの平均的な出力から「B&amp;Dらしさ」を守るためにこそ理念のテキスト化（Phase 2以降）が活きる、と中期構想への橋渡しにする。生成AI利用の開示ポリシーも整備範囲に含む。</td></tr>
+      <tr><td>「効果の根拠は」</td><td>社内の試行実績（自社データ）で語る。外部の一般論より、隣の部署の数字。</td></tr>
+    </tbody>
+  </table>
+</section>
+<hr class="divider">
+
+<!-- ============ 08 Next Steps ============ -->
+<section id="s8">
+  <div class="sec-label fade-up">08 — Next Steps</div>
+  <h2 class="fade-up">すぐやること</h2>
+
+  <h3 class="fade-up"><svg><use href="#i-check"/></svg>今日の対話からの宿題</h3>
+  <table class="fade-up">
+    <thead><tr><th>担当</th><th>アクション</th></tr></thead>
+    <tbody>
+      <tr><td>B&amp;D様</td><td>全社員のオプトアウト設定確認 ／ マネージャー14条のデータ送付 ／ 無料版→有料版の切替検討</td></tr>
+      <tr><td>TOKON</td><td>理念セミナー動画・資料の送付 ／ 役員会資料の骨子協力 ／ 社長の経歴を物語化するプロジェクト企画案（本書05章がその原型）</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="fade-up"><svg><use href="#i-flag"/></svg>次回打ち合わせで決めたいこと</h3>
+  <div class="card fade-up">
+    <p style="margin-bottom:8px">① 役員会の日程と、資料ドラフトのレビュー日程（逆算で今週中に着手）</p>
+    <p style="margin-bottom:8px">② 有料版切替の対象範囲（全社一斉か、部門先行か）</p>
+    <p style="margin-bottom:8px">③ 社長1on1のタイミングと、同席者の設計</p>
+    <p style="margin-bottom:0">④ コルポラの版（ライト版4回／正規版10回）と、インタビュー対象者の範囲（社長のみか、クリエイティブ責任者を含む法人格型か）</p>
+  </div>
+
+  <div class="insight fade-up">
+    <span class="in-label">最後に</span>
+    <p>ご相談の中でいちばん印象に残ったのは、「今諦めるとまずい」という言葉でした。売上が伸びている今だからこそ打てる手があり、目標も理念も危機感もすでに揃っています。<strong>あと必要なのは、それらを繋ぐ回路だけ。ぜひご一緒に作らせてください。</strong></p>
+  </div>
+</section>
+
+</div><!-- /wrap -->
+
+<footer class="foot">
+  <p>本資料は、8月18日の対話の議事録をもとに、喜多村がEXLICA（Claude Fable）との壁打ちを通じて当日中に構成したものです。</p>
+  <p><strong style="color:rgba(255,255,255,0.9)">——つまり本書は、ご提案している「AIと働く文化」の実演でもあります。</strong></p>
+  <div class="f-en">株式会社トーコン</div>
+</footer>
+
+<script>
+(function(){
+  var html=document.documentElement;
+
+  // tone toggle
+  var toneBtn=document.getElementById('toneBtn');
+  toneBtn.addEventListener('click',function(){
+    var blue=html.getAttribute('data-tone')==='blue';
+    html.setAttribute('data-tone',blue?'ink':'blue');
+    toneBtn.textContent=blue?'LUNAR GRAY':'BLUE';
+  });
+
+  // theme toggle
+  var themeBtn=document.getElementById('themeBtn');
+  var themeIcon=document.getElementById('themeIcon').querySelector('use');
+  themeBtn.addEventListener('click',function(){
+    var dark=html.getAttribute('data-theme')==='dark';
+    if(dark){html.removeAttribute('data-theme');themeIcon.setAttribute('href','#i-moon');}
+    else{html.setAttribute('data-theme','dark');themeIcon.setAttribute('href','#i-sun');}
+  });
+
+  // font size
+  var fs=3;
+  function applyFs(){ if(fs===3){html.removeAttribute('data-fs');}else{html.setAttribute('data-fs',String(fs));} }
+  document.getElementById('fsMinus').addEventListener('click',function(){ if(fs>1){fs--;applyFs();} });
+  document.getElementById('fsPlus').addEventListener('click',function(){ if(fs<5){fs++;applyFs();} });
+
+  // fade-up
+  var obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e,i){
+      if(e.isIntersecting){
+        setTimeout(function(){e.target.classList.add('visible');},i*60);
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.fade-up').forEach(function(el){obs.observe(el);});
+
+  // sidenav
+  var nav=document.getElementById('sidenav');
+  var items=nav.querySelectorAll('li');
+  var ids=['s1','s2','s3','s4','s5','s6','s7','s8'];
+  var coverObs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ nav.classList.toggle('on',!e.isIntersecting); });
+  },{threshold:0.05});
+  coverObs.observe(document.getElementById('cover'));
+
+  items.forEach(function(li){
+    li.addEventListener('click',function(){
+      var t=document.getElementById(li.getAttribute('data-target'));
+      if(t){t.scrollIntoView({behavior:'smooth'});}
+    });
+  });
+
+  function spy(){
+    var y=window.scrollY+window.innerHeight*0.3;
+    var current=0;
+    ids.forEach(function(id,i){
+      var el=document.getElementById(id);
+      if(el&&el.offsetTop<=y){current=i;}
+    });
+    items.forEach(function(li,i){li.classList.toggle('active',i===current);});
+  }
+  window.addEventListener('scroll',spy,{passive:true});
+  spy();
+
+  // copy button
+  window.copyPrompt=function(btn){
+    var pre=btn.parentElement.querySelector('pre');
+    var txt=pre.textContent;
+    navigator.clipboard.writeText(txt).then(function(){
+      var old=btn.textContent;
+      btn.textContent='コピーしました！';
+      setTimeout(function(){btn.textContent=old;},2000);
+    });
+  };
+})();
+</script>
+</body>
+</html>
